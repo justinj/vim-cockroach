@@ -1,9 +1,4 @@
 " --- Cockroach ---
-function! s:CockroachExec()
-  exec "silent %!/Users/justin/go/src/github.com/justinj/cr-wb/cr-wb"
-endfunction
-command! -nargs=* CR call s:CockroachExec()
-
 function! s:TestLogic(args)
   let output = tempname()
   exec "silent !make testlogic TESTFLAGS=\"\" FILES=\"".a:args."\" \| tee ".output
