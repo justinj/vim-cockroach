@@ -2,7 +2,7 @@
 function! s:TestLogic(args)
   let output = tempname()
   exec "silent !make testlogic TESTFLAGS=\"\" FILES=\"".a:args."\" \| tee ".output
-  if match(readfile(output),"^FAIL$") >= 0
+  if v:shell_error != 0
     exec "vsplit ".output
     setlocal nowrap
     setlocal nomodifiable
@@ -14,7 +14,7 @@ command! -nargs=* TL call s:TestLogic("<args>")
 function! s:TestLogicRewrite(args)
   let output = tempname()
   exec "silent !make testlogic TESTFLAGS=\"-rewrite-results-in-testfiles\" FILES=\"".a:args."\" \| tee ".output
-  if match(readfile(output),"^FAIL$") >= 0
+  if v:shell_error != 0
     exec "vsplit ".output
     setlocal nowrap
     setlocal nomodifiable
