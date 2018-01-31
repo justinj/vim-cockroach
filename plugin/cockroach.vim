@@ -1,8 +1,9 @@
 " --- Cockroach ---
 function! s:TestLogic(args)
   let output = tempname()
-  exec "silent !make testlogic TESTFLAGS=\"\" FILES=\"".a:args."\" \| tee ".output
-  if v:shell_error != 0
+  exec "silent !make testlogic TESTFLAGS=\"\" FILES=\"".a:args."\" 2>\&1 \| tee ".output
+  echom output
+  if match(readfile(output),"^FAIL$") >= 0 || match(readfile(output),"^panic") >= 0
     exec "vsplit ".output
     setlocal nowrap
     setlocal nomodifiable
@@ -13,8 +14,8 @@ command! -nargs=* TL call s:TestLogic("<args>")
 
 function! s:TestLogicRewrite(args)
   let output = tempname()
-  exec "silent !make testlogic TESTFLAGS=\"-rewrite-results-in-testfiles\" FILES=\"".a:args."\" \| tee ".output
-  if v:shell_error != 0
+  exec "silent !make testlogic TESTFLAGS=\"-rewrite-results-in-testfiles\" FILES=\"".a:args."\" 2>\&1 \| tee ".output
+  if match(readfile(output),"^FAIL$") >= 0 || match(readfile(output),"^panic") >= 0
     exec "vsplit ".output
     setlocal nowrap
     setlocal nomodifiable
